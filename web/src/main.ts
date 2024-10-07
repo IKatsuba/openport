@@ -3,7 +3,6 @@ import optimist from 'optimist';
 import log from 'book';
 
 import CreateServer from './server';
-import * as process from 'node:process';
 
 const argv = optimist
   .usage('Usage: $0 --port [num]')

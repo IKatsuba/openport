@@ -46,6 +46,7 @@ class ClientManager {
       this.stats.tunnels++;
       return { id, port: info.port, max_conn_count: maxSockets };
     } catch (err) {
+      console.error(err);
       this.removeClient(id);
       throw err;
     }

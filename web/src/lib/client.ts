@@ -48,7 +48,8 @@ class Client extends EventEmitter {
 
     // TODO(roman): an agent error removes the client, the user needs to re-connect?
     // how does a user realize they need to re-connect vs some random client being assigned same port?
-    this.agent.once('error', () => {
+    this.agent.once('error', (error) => {
+      console.error(`client error ${this.id}`, error);
       this.close();
     });
   }
@@ -84,7 +85,8 @@ class Client extends EventEmitter {
     // this can happen when underlying agent produces an error
     // in our case we 504 gateway error this?
     // if we have already sent headers?
-    clientReq.once('error', () => {
+    clientReq.once('error', (error) => {
+      console.error('clientReq error', error);
       // TODO(roman): if headers not sent - respond with gateway unavailable
     });
 

@@ -3,11 +3,12 @@ import optimist from 'optimist';
 import log from 'book';
 
 import CreateServer from './server';
+import * as process from 'node:process';
 
 const argv = optimist
   .usage('Usage: $0 --port [num]')
   .options('secure', {
-    default: false,
+    default: process.env.SECURE === 'true' || false,
     describe: 'use this flag to indicate proxy over https',
   })
   .options('port', {

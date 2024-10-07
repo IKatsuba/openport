@@ -1,7 +1,5 @@
 import optimist from 'optimist';
 
-import log from 'book';
-
 import CreateServer from './server';
 
 const argv = optimist
@@ -59,9 +57,9 @@ process.on('SIGTERM', () => {
 });
 
 process.on('uncaughtException', (err) => {
-  log.error(err);
+  console.error(err);
 });
 
 process.on('unhandledRejection', (reason) => {
-  log.error(reason);
+  console.error(reason);
 });

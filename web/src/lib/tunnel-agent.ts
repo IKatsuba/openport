@@ -1,6 +1,5 @@
 import { Agent } from 'http';
 import net from 'net';
-import log from 'book';
 
 const DEFAULT_MAX_SOCKETS = 10;
 
@@ -70,7 +69,7 @@ class TunnelAgent extends Agent {
       if (err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT') {
         return;
       }
-      log.error(err);
+      console.error(err);
     });
 
     return new Promise((resolve) => {

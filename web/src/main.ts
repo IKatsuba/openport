@@ -24,7 +24,7 @@ const argv = optimist
   .options('domain', {
     describe:
       'Specify the base domain name. This is optional if hosting localtunnel from a regular example.com domain. This is required if hosting a localtunnel server from a subdomain (i.e. lt.example.dom where clients will be client-app.lt.example.come)',
-    default: 'localhost:8080',
+    default: process.env.DOMAIN || 'localhost:8080',
   })
   .options('max-sockets', {
     default: 10,

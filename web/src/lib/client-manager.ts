@@ -1,5 +1,4 @@
 import { hri } from 'human-readable-ids';
-import Debug from 'debug';
 import Client from './client';
 import TunnelAgent from './tunnel-agent';
 
@@ -18,14 +17,12 @@ class ClientManager {
   private opt: ClientManagerOptions;
   private clients: Map<string, Client>;
   stats: { tunnels: number };
-  private debug: Debug.Debugger;
   private graceTimeout: NodeJS.Timeout | null;
 
   constructor(opt: ClientManagerOptions = {}) {
     this.opt = opt;
     this.clients = new Map<string, Client>();
     this.stats = { tunnels: 0 };
-    this.debug = Debug('lt:ClientManager');
     this.graceTimeout = null;
   }
 
@@ -55,7 +52,7 @@ class ClientManager {
   }
 
   removeClient(id: string): void {
-    this.debug('removing client: %s', id);
+    console.log(`removing client: ${id}`);
     const client = this.clients.get(id);
     if (!client) return;
     this.stats.tunnels--;

@@ -1,11 +1,8 @@
 import optimist from 'optimist';
 
 import log from 'book';
-import Debug from 'debug';
 
 import CreateServer from './server';
-
-const debug = Debug('localtunnel');
 
 const argv = optimist
   .usage('Usage: $0 --port [num]')
@@ -47,7 +44,7 @@ server.listen(argv.port, argv.address, () => {
   const address = server.address();
 
   if (typeof address === 'object' && address !== null) {
-    debug('server listening on port: %d', address.port);
+    console.log(`server listening on port: ${address.port}`);
   } else {
     throw new Error('Failed to get server address');
   }

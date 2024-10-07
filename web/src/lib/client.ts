@@ -1,6 +1,5 @@
 import http from 'http';
 import net from 'net';
-import Debug from 'debug';
 import pump from 'pump';
 import EventEmitter from 'events';
 import TunnelAgent from './tunnel-agent';
@@ -17,7 +16,6 @@ interface ClientOptions {
 class Client extends EventEmitter {
   private readonly agent: TunnelAgent;
   private readonly id: string;
-  private readonly debug: Debug.Debugger;
   private graceTimeout: NodeJS.Timeout;
 
   constructor(options: ClientOptions) {
@@ -26,20 +24,18 @@ class Client extends EventEmitter {
     this.agent = options.agent;
     this.id = options.id;
 
-    this.debug = Debug(`lt:Client[${this.id}]`);
-
     // client is given a grace period in which they can connect before they are _removed_
     this.graceTimeout = setTimeout(() => {
       this.close();
     }, 1000).unref();
 
     this.agent.on('online', () => {
-      this.debug('client online %s', this.id);
+      console.log(`client online ${this.id}`);
       clearTimeout(this.graceTimeout);
     });
 
     this.agent.on('offline', () => {
-      this.debug('client offline %s', this.id);
+      console.log(`client offline ${this.id}`);
 
       // if there was a previous timeout set, we don't want to double trigger
       clearTimeout(this.graceTimeout);
@@ -68,7 +64,7 @@ class Client extends EventEmitter {
   }
 
   handleRequest(req: http.IncomingMessage, res: http.ServerResponse): void {
-    this.debug('> %s', req.url);
+    console.log('>', req.url);
     const opt: http.RequestOptions = {
       path: req.url,
       agent: this.agent,
@@ -77,7 +73,7 @@ class Client extends EventEmitter {
     };
 
     const clientReq = http.request(opt, (clientRes) => {
-      this.debug('< %s', req.url);
+      console.log('<', req.url);
       // write response code and headers
       res.writeHead(clientRes.statusCode || 500, clientRes.headers);
 
@@ -97,7 +93,7 @@ class Client extends EventEmitter {
   }
 
   handleUpgrade(req: http.IncomingMessage, socket: net.Socket): void {
-    this.debug('> [up] %s', req.url);
+    console.log('> [up]', req.url);
     socket.once('error', (err: NodeJS.ErrnoException) => {
       // These client side errors can happen if the client dies while we are reading
       // We don't need to surface these in our logs.
@@ -110,7 +106,7 @@ class Client extends EventEmitter {
     this.agent.createConnection(
       socket,
       (err: Error | null, conn?: net.Socket) => {
-        this.debug('< [up] %s', req.url);
+        console.log('< [up]', req.url);
         // any errors getting a connection mean we cannot service this request
         if (err || !conn) {
           socket.end();

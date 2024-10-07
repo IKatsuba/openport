@@ -97,6 +97,7 @@ class Client extends EventEmitter {
   handleUpgrade(req: http.IncomingMessage, socket: net.Socket): void {
     console.log('> [up]', req.url);
     socket.once('error', (err: NodeJS.ErrnoException) => {
+      console.error('socket error', err);
       // These client side errors can happen if the client dies while we are reading
       // We don't need to surface these in our logs.
       if (err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT') {

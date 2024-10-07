@@ -65,6 +65,7 @@ class TunnelAgent extends Agent {
     server.on('close', this._onClose.bind(this));
     server.on('connection', this._onConnection.bind(this));
     server.on('error', (err: NodeJS.ErrnoException) => {
+      console.error(err);
       // These errors happen from killed connections, we don't worry about them
       if (err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT') {
         return;
@@ -84,6 +85,7 @@ class TunnelAgent extends Agent {
             port: port,
           });
         } else {
+          console.error('Failed to get server address');
           throw new Error('Failed to get server address');
         }
       });
@@ -127,7 +129,8 @@ class TunnelAgent extends Agent {
     });
 
     // close will be emitted after this
-    socket.once('error', () => {
+    socket.once('error', (err) => {
+      console.error('socket error', err);
       // we do not log these errors, sessions can drop from clients for many reasons
       // these are not actionable errors for our server
       socket.destroy();
